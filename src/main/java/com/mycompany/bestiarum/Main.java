@@ -1,8 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
-
 package com.mycompany.bestiarum;
+
+import com.mycompany.bestiarum.controller.MonsterController;
+import com.mycompany.bestiarum.view.MonsterView;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -11,6 +11,10 @@ package com.mycompany.bestiarum;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        SwingUtilities.invokeLater(() -> {
+            MonsterController controller = new MonsterController();
+            MonsterView view = new MonsterView(controller);
+            view.setVisible(true);
+        });
     }
 }
