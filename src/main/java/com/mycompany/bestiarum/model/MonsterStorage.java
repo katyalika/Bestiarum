@@ -1,5 +1,6 @@
 package com.mycompany.bestiarum.model;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -7,15 +8,20 @@ import java.util.*;
  * @author lihac
  */
 public class MonsterStorage {
-
     private final List<Monster> monsters = new ArrayList<>();
     private final Map<String, List<Monster>> monstersBySource = new HashMap<>();
+    private final Map<File, List<Monster>> monstersByFile = new HashMap<>();
 
-    public void addMonster(Monster monster) {
-        if (monster != null) {
+    public void addMonster(Monster monster, File sourceFile) {
+        if (monster != null && sourceFile != null) {
             monsters.add(monster);
             monstersBySource.computeIfAbsent(monster.getSource(), k -> new ArrayList<>()).add(monster);
+            monstersByFile.computeIfAbsent(sourceFile, k -> new ArrayList<>()).add(monster);
         }
+    }
+
+    public List<Monster> getMonstersByFile(File file) {
+        return Collections.unmodifiableList(monstersByFile.getOrDefault(file, Collections.emptyList()));
     }
 
     public List<Monster> getMonsters() {
@@ -36,10 +42,7 @@ public class MonsterStorage {
         Optional<Monster> existing = getMonsterById(id);
         if (existing.isPresent()) {
             Monster monster = existing.get();
-            // Сохраняем оригинальный source
             String originalSource = monster.getSource();
-
-            // Обновляем все поля
             monster.setName(newData.getName());
             monster.setDescription(newData.getDescription());
             monster.setDangerLevel(newData.getDangerLevel());
@@ -50,12 +53,9 @@ public class MonsterStorage {
             monster.setActivity(newData.getActivity());
             monster.getParameters().clear();
             monster.getParameters().putAll(newData.getParameters());
-            monster.getPoisonRecipe().clear();
-            monster.getPoisonRecipe().addAll(newData.getPoisonRecipe());
-            monster.getOilRecipe().clear();
-            monster.getOilRecipe().addAll(newData.getOilRecipe());
+            monster.getRecipe().clear();
+            monster.getRecipe().addAll(newData.getRecipe());
 
-            // Обновляем индекс по source если изменился
             if (!originalSource.equals(newData.getSource())) {
                 monstersBySource.get(originalSource).remove(monster);
                 monstersBySource.computeIfAbsent(newData.getSource(), k -> new ArrayList<>()).add(monster);

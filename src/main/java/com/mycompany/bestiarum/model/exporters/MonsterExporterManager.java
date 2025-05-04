@@ -1,22 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.bestiarum.model.exporters;
 
 import com.mycompany.bestiarum.model.Monster;
 import com.mycompany.bestiarum.model.MonsterStorage;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author lihac
  */
 public class MonsterExporterManager {
-
     private final MonsterStorage storage;
 
     public MonsterExporterManager(MonsterStorage storage) {
@@ -24,73 +19,66 @@ public class MonsterExporterManager {
     }
 
     public void exportData(JFrame parent, List<Monster> monsters) {
-        if (monsters == null || monsters.isEmpty()) {
-            JOptionPane.showMessageDialog(parent,
-                    "No monsters selected for export",
-                    "Export Error",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        JFileChooser fileChooser = createExportFileChooser();
-        int result = fileChooser.showSaveDialog(parent);
-
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File file = ensureCorrectExtension(fileChooser);
-            performExport(parent, file, monsters);
-        }
-    }
-
-    private JFileChooser createExportFileChooser() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-        fileChooser.setDialogTitle("Export Monsters");
+        fileChooser.setDialogTitle("Сохранить как");
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);
+        javax.swing.filechooser.FileNameExtensionFilter jsonFilter = new javax.swing.filechooser.FileNameExtensionFilter("JSON Files", "json");
+        javax.swing.filechooser.FileNameExtensionFilter xmlFilter = new javax.swing.filechooser.FileNameExtensionFilter("XML Files", "xml");
+        javax.swing.filechooser.FileNameExtensionFilter yamlFilter = new javax.swing.filechooser.FileNameExtensionFilter("YAML Files", "yaml", "yml");
+        fileChooser.addChoosableFileFilter(jsonFilter);
+        fileChooser.addChoosableFileFilter(xmlFilter);
+        fileChooser.addChoosableFileFilter(yamlFilter);
 
-        fileChooser.addChoosableFileFilter(
-                new FileNameExtensionFilter("JSON Files (*.json)", "json"));
-        fileChooser.addChoosableFileFilter(
-                new FileNameExtensionFilter("XML Files (*.xml)", "xml"));
-        fileChooser.addChoosableFileFilter(
-                new FileNameExtensionFilter("YAML Files (*.yaml, *.yml)", "yaml", "yml"));
+        int returnValue = fileChooser.showSaveDialog(parent);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            javax.swing.filechooser.FileFilter selectedFilter = fileChooser.getFileFilter();
 
-        return fileChooser;
-    }
+            String extension = getFileExtension(selectedFile.getName());
+            String expectedExtension = "";
 
-    private File ensureCorrectExtension(JFileChooser fileChooser) {
-        File file = fileChooser.getSelectedFile();
-        FileNameExtensionFilter filter = (FileNameExtensionFilter) fileChooser.getFileFilter();
-        String path = file.getAbsolutePath();
+            if (selectedFilter == jsonFilter) {
+                expectedExtension = "json";
+            } else if (selectedFilter == xmlFilter) {
+                expectedExtension = "xml";
+            } else if (selectedFilter == yamlFilter) {
+                expectedExtension = "yaml";
+            }
 
-        for (String ext : filter.getExtensions()) {
-            if (path.toLowerCase().endsWith("." + ext.toLowerCase())) {
-                return file;
+            if (!extension.equalsIgnoreCase(expectedExtension)) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + "." + expectedExtension);
+            }
+
+            try {
+                switch (expectedExtension) {
+                    case "json":
+                        new JSONExporter().export(monsters, selectedFile);
+                        break;
+                    case "xml":
+                        new XMLExporter().export(monsters, selectedFile);
+                        break;
+                    case "yaml":
+                        try (FileWriter writer = new FileWriter(selectedFile)) {
+                            new YAMLExporter().export(monsters, writer);
+                        }
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(parent, "Неподдерживаемый формат файла.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+                JOptionPane.showMessageDialog(parent, "Экспорт завершён.", "Успех", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(parent, "Ошибка экспорта: " + e.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
         }
-
-        return new File(path + "." + filter.getExtensions()[0]);
     }
 
-    private void performExport(JFrame parent, File file, List<Monster> monsters) {
-        try {
-            MonsterExporter exporter = ExporterFactory.getExporter(file);
-            exporter.export(file, monsters);
-
-            JOptionPane.showMessageDialog(parent,
-                    "Successfully exported " + monsters.size() + " monsters to:\n" + file.getAbsolutePath(),
-                    "Export Complete",
-                    JOptionPane.INFORMATION_MESSAGE);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(parent,
-                    "Export failed:\n" + e.getMessage(),
-                    "Export Error",
-                    JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+    private String getFileExtension(String fileName) {
+        int lastIndexOfDot = fileName.lastIndexOf('.');
+        if (lastIndexOfDot == -1) {
+            return "";
         }
-    }
-
-    public void exportAllMonsters(JFrame parent) {
-        exportData(parent, storage.getMonsters());
+        return fileName.substring(lastIndexOfDot + 1).toLowerCase();
     }
 }

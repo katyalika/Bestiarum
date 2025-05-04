@@ -14,7 +14,6 @@ import java.util.UUID;
  * @author lihac
  */
 public class Monster {
-
     private final UUID id = UUID.randomUUID();
     private String name;
     private String description;
@@ -26,8 +25,7 @@ public class Monster {
     private Map<String, String> parameters = new HashMap<>();
     private List<String> immunities = new ArrayList<>();
     private String activity;
-    private List<Map<String, Object>> poisonRecipe = new ArrayList<>();
-    private List<Map<String, Object>> oilRecipe = new ArrayList<>();
+    private List<Map<String, Object>> recipe = new ArrayList<>();
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public UUID getId() {
@@ -138,54 +136,50 @@ public class Monster {
         this.activity = activity;
     }
 
-    public List<Map<String, Object>> getPoisonRecipe() {
-        return poisonRecipe;
+    public List<Map<String, Object>> getRecipe() {
+        return recipe;
     }
-
-    public void setPoisonRecipe(List<Map<String, Object>> poisonRecipe) {
-        this.poisonRecipe = poisonRecipe;
-    }
-
-    public void addPoisonIngredient(String name, int quantity) {
+    
+    public void addIngredient(String name, int quantity) {
         Map<String, Object> ingredient = new HashMap<>();
         ingredient.put("name", name);
         ingredient.put("quantity", quantity);
-        this.poisonRecipe.add(ingredient);
+        this.recipe.add(ingredient);
+    }
+    
+    public List<Map<String, Object>> getIngredientsAsList() {
+        return recipe; 
     }
 
-    public List<Map<String, Object>> getOilRecipe() {
-        return oilRecipe;
+    public void addOrUpdateIngredient(String name, int quantity) {
+        boolean found = false;
+        for (Map<String, Object> ingredient : recipe) {
+            if (name.equals(ingredient.get("name"))) {
+                ingredient.put("quantity", quantity);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            Map<String, Object> newIngredient = new HashMap<>();
+            newIngredient.put("name", name);
+            newIngredient.put("quantity", quantity);
+            recipe.add(newIngredient);
+        }
     }
 
-    public void setOilRecipe(List<Map<String, Object>> oilRecipe) {
-        this.oilRecipe = oilRecipe;
+    public void setRecipe(List<Map<String, Object>> recipe) {
+        this.recipe = recipe;
     }
 
-    public void addOilIngredient(String name, int quantity) {
-        Map<String, Object> ingredient = new HashMap<>();
-        ingredient.put("name", name);
-        ingredient.put("quantity", quantity);
-        this.oilRecipe.add(ingredient);
-    }
-
-    // Методы для установки параметров рецептов
-    public void setPoisonRecipeParams(String prepTime, String effectiveness) {
-        this.parameters.put("poison_prep_time", prepTime);
-        this.parameters.put("poison_effectiveness", effectiveness);
-    }
-
-    public void setOilRecipeParams(String prepTime, String effectiveness) {
-        this.parameters.put("oil_prep_time", prepTime);
-        this.parameters.put("oil_effectiveness", effectiveness);
+    public void setRecipeParams(String prepTime, String effectiveness) {
+        this.parameters.put("prep_time", prepTime);
+        this.parameters.put("effectiveness", effectiveness);
     }
 
     @Override
     public String toString() {
-        return "Monster{"
-                + "name='" + name + '\''
-                + ", dangerLevel=" + dangerLevel
-                + ", habitats=" + habitats
-                + '}';
+        return name;
     }
 
     @Override
@@ -204,6 +198,5 @@ public class Monster {
     public int hashCode() {
         return id.hashCode();
     }
-    
     
 }

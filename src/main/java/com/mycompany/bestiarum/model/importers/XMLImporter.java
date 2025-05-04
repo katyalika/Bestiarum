@@ -1,25 +1,18 @@
 package com.mycompany.bestiarum.model.importers;
 
 import com.mycompany.bestiarum.model.Monster;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
+import java.util.*;
 
 /**
  *
  * @author lihac
  */
-public class XMLImporter implements FileImporter {
 
+public class XMLImporter implements FileImporter {
     private FileImporter next;
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void setNext(FileImporter next) {
@@ -27,141 +20,105 @@ public class XMLImporter implements FileImporter {
     }
 
     @Override
-    public boolean canHandle(File file) {
-        return file.getName().toLowerCase().endsWith(".xml");
+    public List<Monster> importFile(File file) throws Exception {
+        if (canHandle(file)) {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(file);
+
+            NodeList creatureNodes = document.getElementsByTagName("creature");
+            List<Monster> monsters = new ArrayList<>();
+
+            for (int i = 0; i < creatureNodes.getLength(); i++) {
+                Node creatureNode = creatureNodes.item(i);
+                if (creatureNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element creatureElement = (Element) creatureNode;
+                    Monster monster = parseCreatureElement(creatureElement);
+                    monsters.add(monster);
+                }
+            }
+
+            return monsters;
+        } else if (next != null) {
+            return next.importFile(file);
+        } else {
+            throw new UnsupportedOperationException("Unsupported file format: " + file.getName());
+        }
     }
 
     @Override
-    public List<Monster> importFile(File file) throws Exception {
-        if (!canHandle(file)) {
-            if (next != null) {
-                return next.importFile(file);
-            }
-            throw new UnsupportedOperationException("Unsupported file format: " + file.getName());
+    public boolean canHandle(File file) {
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".xml");
+    }
+
+    private Monster parseCreatureElement(Element creatureElement) {
+        Monster monster = new Monster();
+
+        monster.setName(getElementText(creatureElement, "name"));
+        monster.setDescription(getElementText(creatureElement, "description"));
+        monster.setDangerLevel(Integer.parseInt(getElementText(creatureElement, "danger_level")));
+
+        NodeList habitatNodes = creatureElement.getElementsByTagName("region");
+        for (int i = 0; i < habitatNodes.getLength(); i++) {
+            monster.addHabitat(habitatNodes.item(i).getTextContent());
         }
 
-        List<Monster> monsters = new ArrayList<>();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(file));
+        String firstMentioned = getElementText(creatureElement, "first_mentioned");
+        try {
+            monster.setFirstMentioned(firstMentioned);
+        } catch (Exception e) {
+        }
 
-        Monster currentMonster = null;
-        String currentElement = null;
-        Map<String, Object> currentRecipeIngredient = null;
-        boolean inPoisonRecipe = false;
-        boolean inOilRecipe = false;
-        List<Map<String, Object>> currentRecipe = null;
+        NodeList vulnerabilityNodes = creatureElement.getElementsByTagName("vulnerability");
+        for (int i = 0; i < vulnerabilityNodes.getLength(); i++) {
+            monster.addVulnerability(vulnerabilityNodes.item(i).getTextContent());
+        }
 
-        while (reader.hasNext()) {
-            int event = reader.next();
-
-            switch (event) {
-                case XMLStreamConstants.START_ELEMENT:
-                    currentElement = reader.getLocalName();
-
-                    switch (currentElement) {
-                        case "creature":
-                            currentMonster = new Monster();
-                            break;
-                        case "poison_recipe":
-                            inPoisonRecipe = true;
-                            currentRecipe = new ArrayList<>();
-                            break;
-                        case "oil_recipe":
-                            inOilRecipe = true;
-                            currentRecipe = new ArrayList<>();
-                            break;
-                        case "ingredient":
-                            currentRecipeIngredient = new HashMap<>();
-                            String quantity = reader.getAttributeValue(null, "quantity");
-                            if (quantity != null) {
-                                currentRecipeIngredient.put("quantity", quantity);
-                            }
-                            break;
-                    }
-                    break;
-
-                case XMLStreamConstants.CHARACTERS:
-                    if (currentElement != null && currentRecipeIngredient != null && "ingredient".equals(currentElement)) {
-                        currentRecipeIngredient.put("text", reader.getText().trim());
-                    }
-                    break;
-
-                case XMLStreamConstants.END_ELEMENT:
-                    String elementName = reader.getLocalName();
-
-                    if (currentMonster != null) {
-                        if (inPoisonRecipe || inOilRecipe) {
-                            switch (elementName) {
-                                case "ingredient":
-                                    if (currentRecipeIngredient != null) {
-                                        currentRecipe.add(currentRecipeIngredient);
-                                        currentRecipeIngredient = null;
-                                    }
-                                    break;
-                                case "prep_time":
-                                case "effectiveness":
-                                    currentMonster.getParameters().put(
-                                            (inPoisonRecipe ? "poison_" : "oil_") + elementName,
-                                            reader.getElementText().trim()
-                                    );
-                                    break;
-                                case "poison_recipe":
-                                    currentMonster.getPoisonRecipe().addAll(currentRecipe);
-                                    inPoisonRecipe = false;
-                                    currentRecipe = null;
-                                    break;
-                                case "oil_recipe":
-                                    currentMonster.getOilRecipe().addAll(currentRecipe);
-                                    inOilRecipe = false;
-                                    currentRecipe = null;
-                                    break;
-                            }
-                        } else {
-                            String text = reader.getElementText().trim();
-                            if (!text.isEmpty()) {
-                                switch (elementName) {
-                                    case "name":
-                                        currentMonster.setName(text);
-                                        break;
-                                    case "description":
-                                        currentMonster.setDescription(text);
-                                        break;
-                                    case "danger_level":
-                                        currentMonster.setDangerLevel(Integer.parseInt(text));
-                                        break;
-                                    case "region":
-                                        currentMonster.addHabitat(text);
-                                        break;
-                                    case "first_mentioned":
-                                        currentMonster.setFirstMentioned(text);
-                                        break;
-                                    case "vulnerability":
-                                        currentMonster.addVulnerability(text);
-                                        break;
-                                    case "height":
-                                    case "weight":
-                                        currentMonster.getParameters().put(elementName, text);
-                                        break;
-                                    case "immunity":
-                                        currentMonster.addImmunity(text);
-                                        break;
-                                    case "activity":
-                                        currentMonster.setActivity(text);
-                                        break;
-                                    case "creature":
-                                        monsters.add(currentMonster);
-                                        currentMonster = null;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    currentElement = null;
-                    break;
+        NodeList parameterNodes = creatureElement.getElementsByTagName("parameters");
+        if (parameterNodes.getLength() > 0) {
+            Element parametersElement = (Element) parameterNodes.item(0);
+            String height = getElementText(parametersElement, "height");
+            String weight = getElementText(parametersElement, "weight");
+            if (height != null) {
+                monster.setParameter("height", height);
+            }
+            if (weight != null) {
+                monster.setParameter("weight", weight);
             }
         }
 
-        reader.close();
-        return monsters;
+        NodeList immunityNodes = creatureElement.getElementsByTagName("immunity");
+        for (int i = 0; i < immunityNodes.getLength(); i++) {
+            monster.addImmunity(immunityNodes.item(i).getTextContent());
+        }
+
+        monster.setActivity(getElementText(creatureElement, "activity"));
+
+        NodeList recipeNodes = creatureElement.getElementsByTagName("recipe");
+        if (recipeNodes.getLength() > 0) {
+            Element recipeElement = (Element) recipeNodes.item(0);
+            NodeList ingredientNodes = recipeElement.getElementsByTagName("ingredient");
+            for (int i = 0; i < ingredientNodes.getLength(); i++) {
+                Element ingredientElement = (Element) ingredientNodes.item(i);
+                String name = ingredientElement.getTextContent();
+                String quantity = ingredientElement.getAttribute("quantity");
+                monster.addIngredient(name, Integer.parseInt(quantity));
+            }
+
+            String prepTime = getElementText(recipeElement, "prep_time");
+            String effectiveness = getElementText(recipeElement, "effectiveness");
+            monster.setRecipeParams(prepTime, effectiveness);
+        }
+
+        return monster;
+    }
+
+    private String getElementText(Element parent, String tagName) {
+        NodeList nodes = parent.getElementsByTagName(tagName);
+        if (nodes.getLength() > 0) {
+            return nodes.item(0).getTextContent();
+        }
+        return null;
     }
 }

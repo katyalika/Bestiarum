@@ -30,14 +30,14 @@ public class MonsterController {
         }
     }
 
-    private void importFile(File file, JFrame parent, Consumer<List<Monster>> onSuccess) {
+    public void importFile(File file, JFrame parent, Consumer<List<Monster>> onSuccess) {
         try {
             List<Monster> monsters = fileImporter.importFile(file);
             List<UUID> ids = new ArrayList<>();
 
             for (Monster monster : monsters) {
                 monster.setSource(file.getName());
-                storage.addMonster(monster);
+                storage.addMonster(monster, file); 
                 ids.add(monster.getId());
             }
 
@@ -51,16 +51,17 @@ public class MonsterController {
         }
     }
 
-    public void exportMonsters(JFrame parent, List<Monster> monsters) {
-        exportManager.exportData(parent, monsters);
+    public List<Monster> getMonstersByFile(File file) {
+        return storage.getMonstersByFile(file);
+    }
+    
+    public void exportAllMonsters(JFrame parent) {
+        List<Monster> allMonsters = storage.getMonsters();
+        exportManager.exportData(parent, allMonsters);
     }
 
     public boolean updateMonster(UUID id, Monster newData) {
         return storage.updateMonster(id, newData);
-    }
-
-    public Optional<Monster> getMonster(UUID id) {
-        return storage.getMonsterById(id);
     }
 
     public List<Monster> getAllMonsters() {

@@ -1,23 +1,57 @@
 package com.mycompany.bestiarum.model.exporters;
 
 import com.mycompany.bestiarum.model.Monster;
-import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 /**
  *
  * @author lihac
  */
-public class YAMLExporter implements MonsterExporter {
+public class YAMLExporter {
+    public void export(List<Monster> monsters, FileWriter fileWriter) throws IOException {
+        Map<String, Object> data = new LinkedHashMap<>();
+        List<Object> creaturesList = new ArrayList<>();
 
-    private final Yaml yaml = new Yaml();
+        for (Monster monster : monsters) {
+            Map<String, Object> monMap = new LinkedHashMap<>();
+            monMap.put("name", monster.getName());
+            monMap.put("description", monster.getDescription());
+            monMap.put("danger_level", monster.getDangerLevel());
+            monMap.put("source", monster.getSource());
+            monMap.put("habitats", monster.getHabitats());
 
-    @Override
-    public void export(File file, List<Monster> monsters) throws Exception {
-        try (FileWriter writer = new FileWriter(file)) {
-            yaml.dump(monsters, writer);
+            String firstMentioned = monster.getFirstMentioned() != null
+                    ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(monster.getFirstMentioned()) : "";
+            monMap.put("first_mentioned", firstMentioned);
+            monMap.put("vulnerabilities", monster.getVulnerabilities());
+            monMap.put("immunities", monster.getImmunities());
+            monMap.put("activity", monster.getActivity());
+
+            Map<String, Object> recipeData = new LinkedHashMap<>();
+            recipeData.put("ingredients", monster.getRecipe());
+            recipeData.put("prep_time", monster.getParameter("prep_time"));
+            recipeData.put("effectiveness", monster.getParameter("effectiveness"));
+            monMap.put("recipe", recipeData);
+
+            creaturesList.add(monMap);
         }
+
+        data.put("creatures", creaturesList);
+
+        DumperOptions options = new DumperOptions();
+        options.setIndent(2);
+        options.setPrettyFlow(true);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        Yaml yaml = new Yaml(options);
+        yaml.dump(data, fileWriter);
+        fileWriter.flush();
     }
 }

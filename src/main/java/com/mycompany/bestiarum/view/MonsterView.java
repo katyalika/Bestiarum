@@ -2,24 +2,38 @@ package com.mycompany.bestiarum.view;
 
 import com.mycompany.bestiarum.controller.MonsterController;
 import com.mycompany.bestiarum.model.Monster;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-
 /**
  *
  * @author lihac
  */
 public class MonsterView extends JFrame {
-
+    
     private final MonsterController controller;
     private JTree monsterTree;
     private JTextArea monsterDetails;
+    private JTextArea descriptionArea;
+    private JButton saveButton;
+    private JLabel descriptionLabel;
+
+    private final Color backgroundColor = new Color(34, 34, 34);
+    private final Color textColor = new Color(230, 230, 230);
+    private final Color accentColor = new Color(96, 169, 255);
+    private final Font titleFont = new Font("Segoe UI", Font.BOLD, 18);
+    private final Font normalFont = new Font("Segoe UI", Font.PLAIN, 14);
+    private final Font monoFont = new Font("Consolas", Font.PLAIN, 13);
 
     public MonsterView(MonsterController controller) {
         this.controller = controller;
@@ -28,34 +42,88 @@ public class MonsterView extends JFrame {
 
     private void initializeUI() {
         setTitle("Bestiarum");
-        setSize(800, 600);
+        setSize(900, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        getContentPane().setBackground(backgroundColor);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(300);
+        splitPane.setDividerLocation(320);
+        splitPane.setBackground(backgroundColor);
 
         monsterTree = new JTree();
+        monsterTree.setFont(normalFont);
+        monsterTree.setForeground(textColor);
+        monsterTree.setBackground(backgroundColor);
+        monsterTree.setOpaque(true);
+
         JScrollPane treeScroll = new JScrollPane(monsterTree);
+        treeScroll.getViewport().setBackground(backgroundColor);
         splitPane.setLeftComponent(treeScroll);
+
+        JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
+        rightPanel.setBackground(backgroundColor);
+        rightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         monsterDetails = new JTextArea();
         monsterDetails.setEditable(false);
+        monsterDetails.setForeground(textColor);
+        monsterDetails.setBackground(new Color(44, 44, 44));
+        monsterDetails.setFont(monoFont);
+        monsterDetails.setLineWrap(true);
+        monsterDetails.setWrapStyleWord(true);
+        monsterDetails.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(accentColor), "All Monster Details", 0, 0, titleFont, accentColor));
         JScrollPane detailsScroll = new JScrollPane(monsterDetails);
-        splitPane.setRightComponent(detailsScroll);
+        detailsScroll.setPreferredSize(new Dimension(520, 320));
+        rightPanel.add(detailsScroll, BorderLayout.CENTER);
+
+        JPanel descriptionPanel = new JPanel(new BorderLayout(5,5));
+        descriptionPanel.setBackground(backgroundColor);
+        descriptionLabel = new JLabel("Описание (редактируемое поле):");
+        descriptionLabel.setForeground(accentColor);
+        descriptionLabel.setFont(normalFont);
+        descriptionArea = new JTextArea(4, 40);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        descriptionArea.setFont(normalFont);
+        descriptionArea.setForeground(textColor);
+        descriptionArea.setBackground(new Color(44,44,44));
+        JScrollPane descriptionScroll = new JScrollPane(descriptionArea);
+        descriptionPanel.add(descriptionLabel, BorderLayout.NORTH);
+        descriptionPanel.add(descriptionScroll, BorderLayout.CENTER);
+
+        saveButton = new JButton("Сохранить изменения");
+        saveButton.setFont(titleFont);
+        saveButton.setBackground(accentColor);
+        saveButton.setForeground(backgroundColor);
+        saveButton.setFocusPainted(false);
+        saveButton.addActionListener(e -> saveChanges());
+        descriptionPanel.add(saveButton, BorderLayout.SOUTH);
+
+        rightPanel.add(descriptionPanel, BorderLayout.SOUTH);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(backgroundColor);
         JButton importButton = new JButton("Import Files");
-        importButton.addActionListener(e -> importFiles());
+        importButton.setBackground(accentColor);
+        importButton.setForeground(backgroundColor);
+        importButton.setFont(titleFont);
+        importButton.setFocusPainted(false);
+        importButton .addActionListener(e -> importFiles());
         buttonPanel.add(importButton);
 
-        JButton exportButton = new JButton("Export Selected");
-        exportButton.addActionListener(e -> exportSelected());
+        JButton exportButton = new JButton("Export All");
+        exportButton.setBackground(accentColor);
+        exportButton.setForeground(backgroundColor);
+        exportButton.setFont(titleFont);
+        exportButton.setFocusPainted(false);
+        exportButton.addActionListener(e -> exportAll());
         buttonPanel.add(exportButton);
 
-        getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout(10,10));
         getContentPane().add(splitPane, BorderLayout.CENTER);
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+        getContentPane().add(rightPanel, BorderLayout.EAST);
 
         updateTree();
     }
@@ -68,9 +136,9 @@ public class MonsterView extends JFrame {
                     "Import Complete", JOptionPane.INFORMATION_MESSAGE);
         });
     }
-
-    private void exportSelected() {
-        // Реализация экспорта выбранных монстров
+    
+    private void exportAll() {
+        controller.exportAllMonsters(this);
     }
 
     private void updateTree() {
@@ -90,23 +158,109 @@ public class MonsterView extends JFrame {
         }
 
         monsterTree.setModel(new DefaultTreeModel(root));
-        monsterTree.addTreeSelectionListener(e -> {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) monsterTree.getLastSelectedPathComponent();
-            if (node != null && node.getUserObject() instanceof Monster) {
-                showMonsterDetails((Monster) node.getUserObject());
+        monsterTree.setForeground(Color.WHITE);
+        monsterTree.setBackground(backgroundColor);
+
+        monsterTree.addTreeSelectionListener(new TreeSelectionListener() {
+            @Override
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) monsterTree.getLastSelectedPathComponent();
+                if (node != null && node.getUserObject() instanceof Monster) {
+                    showMonsterDetails((Monster) node.getUserObject());
+                }
             }
         });
     }
 
     private void showMonsterDetails(Monster monster) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Name: ").append(monster.getName()).append("\n");
-        sb.append("Danger Level: ").append(monster.getDangerLevel()).append("\n");
-        sb.append("Source: ").append(monster.getSource()).append("\n");
-        sb.append("Habitats: ").append(String.join(", ", monster.getHabitats())).append("\n");
-        sb.append("First Mentioned: ").append(monster.getFirstMentioned()).append("\n");
-        sb.append("Vulnerabilities: ").append(String.join(", ", monster.getVulnerabilities())).append("\n");
+        sb.append("Имя: ").append(monster.getName()).append("\n");
+        sb.append("Описание: ").append(monster.getDescription()).append("\n\n");
+        sb.append("Уровень опасности: ").append(monster.getDangerLevel()).append("\n");
+        sb.append("Источник: ").append(nonNullOrDefault(monster.getSource(), "не указано")).append("\n");
+
+        sb.append("Места обитания: ");
+        List<String> habitats = monster.getHabitats();
+        sb.append(habitats != null && !habitats.isEmpty() ? String.join(", ", habitats) : "не указано").append("\n");
+
+        sb.append("Впервые упомянут: ").append(formatDate(monster.getFirstMentioned())).append("\n");
+
+        sb.append("Чувствительность: ");
+        List<String> vulnerabilities = monster.getVulnerabilities();
+        sb.append(vulnerabilities != null && !vulnerabilities.isEmpty() ? String.join(", ", vulnerabilities) : "не указано").append("\n");
+
+        sb.append("Иммунитет: ");
+        List<String> immunities = monster.getImmunities();
+        sb.append(immunities != null && !immunities.isEmpty() ? String.join(", ", immunities) : "не указано").append("\n");
+
+        sb.append("Активность: ").append(nonNullOrDefault(monster.getActivity(), "не указано")).append("\n\n");
+
+        sb.append("Параметры:\n");
+            Map<String, String> params = monster.getParameters();
+            if (params != null && !params.isEmpty()) {
+            String height = params.get("height"); 
+            String weight = params.get("weight");
+
+            if (height != null) {
+                sb.append("  Рост: ").append(height).append("\n");
+            } else {
+                sb.append("  Рост: не указано\n");
+            }
+
+            if (weight != null) {
+                sb.append("  Вес: ").append(weight).append("\n");
+            } else {
+                sb.append("  Вес: не указано\n");
+            }
+        } else {
+            sb.append("  не указано\n");
+        }
+        sb.append("\n");
+
+        sb.append("Рецепт масла:\n");
+        List<Map<String, Object>> ingredients = monster.getRecipe();
+        if (ingredients != null && !ingredients.isEmpty()) {
+            for (Map<String, Object> ingredient : ingredients) {
+                String name = (String) ingredient.get("name");
+                Object quantityObj = ingredient.get("quantity");
+                String quantity = quantityObj != null ? quantityObj.toString() : "0";
+                sb.append("  - ").append(name).append(": ").append(quantity).append("\n");
+            }
+        } else {
+            sb.append("  не указано\n");
+        }
+        sb.append("  Эффективность: ").append(nonNullOrDefault(monster.getParameter("effectiveness"), "не указано")).append("\n");
+        sb.append("  Время приготовления: ").append(nonNullOrDefault(monster.getParameter("prep_time"), "не указано")).append("\n");
+
 
         monsterDetails.setText(sb.toString());
+        monsterDetails.setCaretPosition(0);
+
+        descriptionArea.setText(monster.getDescription());
+    }
+
+    private void saveChanges() {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) monsterTree.getLastSelectedPathComponent();
+        if (node != null && node.getUserObject() instanceof Monster) {
+            Monster monster = (Monster) node.getUserObject();
+            monster.setDescription(descriptionArea.getText());
+            JOptionPane.showMessageDialog(this, "Изменения сохранены.", "Сохранение", JOptionPane.INFORMATION_MESSAGE);
+            showMonsterDetails(monster);
+        }
+    }
+
+    private String formatDate(Date date) {
+        if (date == null) return "N/A";
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd.MM.yyyy");
+        return outputFormat.format(date);
+    }
+
+    private String nonNullOrDefault(String str, String def) {
+        return (str != null && !str.isEmpty()) ? str : def;
+    }
+
+    private String capitalize(String str) {
+        if (str == null || str.isEmpty()) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

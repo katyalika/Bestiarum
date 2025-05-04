@@ -1,111 +1,82 @@
 package com.mycompany.bestiarum.model.exporters;
 
 import com.mycompany.bestiarum.model.Monster;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.*;
+
 import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 /**
  *
  * @author lihac
  */
-public class XMLExporter implements MonsterExporter {
+public class XMLExporter {
+    public void export(List<Monster> monsters, File outputFile) throws Exception {
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-    @Override
-    public void export(File file, List<Monster> monsters) throws Exception {
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
-        XMLStreamWriter writer = factory.createXMLStreamWriter(new FileOutputStream(file));
+        Document doc = docBuilder.newDocument();
+        Element rootElement = doc.createElement("creatures");
+        doc.appendChild(rootElement);
 
-        try {
-            writer.writeStartDocument("UTF-8", "1.0");
-            writer.writeStartElement("monsters");
+        for (Monster monster : monsters) {
+            Element monsterElement = doc.createElement("monster");
+            rootElement.appendChild(monsterElement);
+            appendTextElement(doc, monsterElement, "name", monster.getName());
+            appendTextElement(doc, monsterElement, "description", monster.getDescription());
+            appendTextElement(doc, monsterElement, "danger_level", String.valueOf(monster.getDangerLevel()));
+            appendTextElement(doc, monsterElement, "source", monster.getSource());
+            Element habitatsElement = doc.createElement("habitats");
+            monsterElement.appendChild(habitatsElement);
+            for (String habitat : monster.getHabitats()) {
+                appendTextElement(doc, habitatsElement, "habitat", habitat);
+            }
+            String dateStr = (monster.getFirstMentioned() != null)
+                    ? new java.text.SimpleDateFormat("yyyy-MM-dd").format(monster.getFirstMentioned()) : "";
+            appendTextElement(doc, monsterElement, "first_mentioned", dateStr);
 
-            for (Monster monster : monsters) {
-                writeMonster(writer, monster);
+            Element vulnerabilitiesElement = doc.createElement("vulnerabilities");
+            monsterElement.appendChild(vulnerabilitiesElement);
+            for (String vuln : monster.getVulnerabilities()) {
+                appendTextElement(doc, vulnerabilitiesElement, "vulnerability", vuln);
             }
 
-            writer.writeEndElement(); // monsters
-            writer.writeEndDocument();
-        } finally {
-            writer.close();
-        }
-    }
-
-    private void writeMonster(XMLStreamWriter writer, Monster monster) throws XMLStreamException {
-        writer.writeStartElement("monster");
-
-        writeElement(writer, "name", monster.getName());
-        writeElement(writer, "description", monster.getDescription());
-        writeElement(writer, "dangerLevel", String.valueOf(monster.getDangerLevel()));
-        writeElement(writer, "source", monster.getSource());
-        writeElement(writer, "activity", monster.getActivity());
-
-        // Habitats
-        for (String habitat : monster.getHabitats()) {
-            writeElement(writer, "habitat", habitat);
-        }
-
-        // First mentioned date
-        if (monster.getFirstMentioned() != null) {
-            writeElement(writer, "firstMentioned", new SimpleDateFormat("yyyy-MM-dd").format(monster.getFirstMentioned()));
-        }
-
-        // Vulnerabilities
-        for (String vulnerability : monster.getVulnerabilities()) {
-            writeElement(writer, "vulnerability", vulnerability);
-        }
-
-        // Immunities
-        for (String immunity : monster.getImmunities()) {
-            writeElement(writer, "immunity", immunity);
-        }
-
-        // Parameters
-        for (Map.Entry<String, String> entry : monster.getParameters().entrySet()) {
-            writer.writeStartElement("parameter");
-            writer.writeAttribute("key", entry.getKey());
-            writer.writeCharacters(entry.getValue());
-            writer.writeEndElement();
-        }
-
-        // Poison recipe
-        if (!monster.getPoisonRecipe().isEmpty()) {
-            writer.writeStartElement("poisonRecipe");
-            for (Map<String, Object> ingredient : monster.getPoisonRecipe()) {
-                writeRecipeIngredient(writer, ingredient);
+            // Добавляем рецепт
+            Element recipeElement = doc.createElement("recipe");
+            monsterElement.appendChild(recipeElement);
+            for (Map<String, Object> ing : monster.getRecipe()) {
+                Element ingElement = doc.createElement("ingredient");
+                recipeElement.appendChild(ingElement);
+                appendTextElement(doc, ingElement, "name", ing.get("name").toString());
+                appendTextElement(doc, ingElement, "quantity", ing.get("quantity").toString());
             }
-            writer.writeEndElement();
+            appendTextElement(doc, recipeElement, "prep_time", monster.getParameter("prep_time"));
+            appendTextElement(doc, recipeElement, "effectiveness", monster.getParameter("effectiveness"));
         }
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
-        // Oil recipe
-        if (!monster.getOilRecipe().isEmpty()) {
-            writer.writeStartElement("oilRecipe");
-            for (Map<String, Object> ingredient : monster.getOilRecipe()) {
-                writeRecipeIngredient(writer, ingredient);
-            }
-            writer.writeEndElement();
-        }
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(outputFile);
 
-        writer.writeEndElement(); // monster
+        transformer.transform(source, result);
     }
 
-    private void writeRecipeIngredient(XMLStreamWriter writer, Map<String, Object> ingredient) throws XMLStreamException {
-        writer.writeStartElement("ingredient");
-        writeElement(writer, "name", (String) ingredient.get("name"));
-        writeElement(writer, "quantity", String.valueOf(ingredient.get("quantity")));
-        writer.writeEndElement();
-    }
-
-    private void writeElement(XMLStreamWriter writer, String name, String value) throws XMLStreamException {
-        if (value != null) {
-            writer.writeStartElement(name);
-            writer.writeCharacters(value);
-            writer.writeEndElement();
+    private void appendTextElement(Document doc, Element parent, String tagName, String textContent) {
+        Element elem = doc.createElement(tagName);
+        if (textContent != null) {
+            elem.appendChild(doc.createTextNode(textContent));
+        } else {
+            elem.appendChild(doc.createTextNode(""));
         }
+        parent.appendChild(elem);
     }
 }
