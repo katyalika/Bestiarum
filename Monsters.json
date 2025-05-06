@@ -1,0 +1,234 @@
+{
+  "creatures": [
+    {
+      "name": "Леший",
+      "description": "Гибрид человека и лесного духа, охраняющий древние рощи",
+      "danger_level": 7,
+      "habitats": ["чащи Брокилона", "Эдингель"],
+      "first_mentioned": "1234-06-21",
+      "vulnerabilities": ["нет (неуязвим к магии)"],
+      "parameters": {
+        "height": "3 м",
+        "weight": "300 кг"
+      },
+      "immunities": ["оглушение", "яды"],
+      "activity": "ночью",
+      "recipe": {
+        "ingredients": [
+          {"name": "корень мандрагоры", "quantity": 3},
+          {"name": "пепел драконида", "quantity": 1},
+          {"name": "эссенция полыни", "quantity": 1}
+        ],
+        "prep_time": "60 мин",
+        "effectiveness": "умеренная"
+      }
+    },
+    {
+      "name": "Полуденница",
+      "description": "Призрак, терроризирующий поля во время жатвы",
+      "danger_level": 5,
+      "habitats": ["поля Редании", "амбары Туссента"],
+      "first_mentioned": "1198-07-15",
+      "vulnerabilities": ["световая магия"],
+      "parameters": {"weight": "неосязаем"},
+      "immunities": ["кровотечение"],
+      "activity": "днём",
+      "recipe": {
+        "ingredients": [
+          {"name": "лепестки лунного цветка", "quantity": 2},
+          {"name": "серебряная нить", "quantity": 1},
+          {"name": "экстракт чеснока", "quantity": 1}
+        ],
+        "prep_time": "30 мин",
+        "effectiveness": "высокая"
+      }
+    },
+    {
+      "name": "Катакан",
+      "description": "Крылатый демон с хвостом скорпиона",
+      "danger_level": 9,
+      "habitats": ["горные пещеры Туссента"],
+      "first_mentioned": "1150-04-12",
+      "vulnerabilities": ["нет (неуязвим к магии)"],
+      "parameters": {
+        "height": "2 м",
+        "weight": "200 кг"
+      },
+      "immunities": ["огонь", "яды"],
+      "activity": "в сумерках",
+      "recipe": {
+        "ingredients": [
+          {"name": "жало мантикоры", "quantity": 4},
+          {"name": "нефритовая пыль", "quantity": 2},
+          {"name": "спирт Альберихта", "quantity": 1}
+        ],
+        "prep_time": "90 мин",
+        "effectiveness": "критическая"
+      }
+    },
+    {
+      "name": "Кикимора",
+      "description": "Болотная нежить из гниющих останков",
+      "danger_level": 6,
+      "habitats": ["топи Вендена"],
+      "first_mentioned": "1221-09-03",
+      "vulnerabilities": ["земляная магия"],
+      "parameters": {
+        "height": "1 м",
+        "weight": "15 кг"
+      },
+      "immunities": ["удушье"],
+      "activity": "ночью",
+      "recipe": {
+        "ingredients": [
+          {"name": "грибы-поганки", "quantity": 5},
+          {"name": "глаз василиска", "quantity": 1},
+          {"name": "роса папоротника", "quantity": 3}
+        ],
+        "prep_time": "45 мин",
+        "effectiveness": "средняя"
+      }
+    },
+    {
+      "name": "Элементаль льда",
+      "description": "Дух вечной зимы",
+      "danger_level": 10,
+      "habitats": ["ледники Ковира"],
+      "first_mentioned": "1105-12-01",
+      "vulnerabilities": ["нет (неуязвим к магии)"],
+      "parameters": {
+        "height": "5 м",
+        "weight": "не измерим"
+      },
+      "immunities": ["заморозка", "дробление"],
+      "activity": "всегда",
+      "recipe": {
+        "ingredients": [
+          {"name": "сердце огненного элементаля", "quantity": 1},
+          {"name": "сера", "quantity": 3},
+          {"name": "расплавленное железо", "quantity": 1}
+        ],
+        "prep_time": "120 мин",
+        "effectiveness": "переменная"
+      }
+    },
+    {
+      "name": "Василиск",
+      "description": "Странные покрытые чешуёй ящерообразные существа, относящиеся к классу Драконидов",
+      "danger_level": 8,
+      "habitats": ["Пещеры", "Заброшенные шахты", "Канализация"],
+      "first_mentioned": "1234-06-21",
+      "vulnerabilities": ["серебро", "масло от орнитозавров", "знак Аард"],
+      "parameters": {
+        "height": "4 м",
+        "weight": "300 кг"
+      },
+      "immunities": ["большинство ядов", "оглушение", "железо"],
+      "activity": "сумерки",
+      "recipe": {
+        "ingredients": [
+          {"name": "купорос", "quantity": 1},
+          {"name": "квебрит", "quantity": 1},
+          {"name": "ребис", "quantity": 1},
+          {"name": "гидраген", "quantity": 1}
+        ],
+        "prep_time": "60 мин",
+        "effectiveness": "длительная"
+      }
+    },
+    {
+      "name": "Археспора",
+      "description": "Плотоядное растение, скрывающееся под поверхностью земли",
+      "danger_level": 7,
+      "habitats": ["Места жестоких убийств", "Могилы жертв преступлений"],
+      "first_mentioned": "1213-04-15",
+      "vulnerabilities": ["серебро", "огонь"],
+      "parameters": {
+        "height": "3 м",
+        "weight": "200 кг"
+      },
+      "immunities": ["воздействие на мозг", "боль", "яд"],
+      "activity": "ночью",
+      "recipe": {
+        "ingredients": [
+          {"name": "Медвежье сало", "quantity": 1},
+          {"name": "Гриб-дождевик", "quantity": 1},
+          {"name": "Волкобой", "quantity": 1},
+          {"name": "Плод баллисы", "quantity": 1},
+          {"name": "Печень волка", "quantity": 1},
+          {"name": "Шкура экиммы", "quantity": 1}
+        ],
+        "prep_time": "90 мин",
+        "effectiveness": "высокая"
+      }
+    },
+    {
+      "name": "Гигантская жаба",
+      "description": "Ядовитая жаба огромных размеров",
+      "danger_level": 6,
+      "habitats": ["Заболоченные районы", "Близ рек и водоемов"],
+      "first_mentioned": "1189-08-30",
+      "vulnerabilities": ["мощная атака", "сталь", "масло против проклятых"],
+      "parameters": {
+        "height": "5 м",
+        "weight": "500 кг"
+      },
+      "immunities": ["болотные газы"],
+      "activity": "дождь и рассвет",
+      "recipe": {
+        "ingredients": [
+          {"name": "Собачье сало", "quantity": 1},
+          {"name": "Волкобой", "quantity": 4}
+        ],
+        "prep_time": "60 мин",
+        "effectiveness": "средняя"
+      }
+    },
+    {
+      "name": "Покаянник",
+      "description": "Дух погибшего в результате гнусного преступления",
+      "danger_level": 5,
+      "habitats": ["Все природные условия"],
+      "first_mentioned": "1124-11-02",
+      "vulnerabilities": ["быстрая атака", "серебро", "масло против призраков"],
+      "parameters": {
+        "height": "2 м",
+        "weight": "0 кг"
+      },
+      "immunities": ["физические атаки"],
+      "activity": "ночью",
+      "recipe": {
+        "ingredients": [
+          {"name": "Эфирное масло", "quantity": 1},
+          {"name": "Серебряная пыль", "quantity": 2},
+          {"name": "Корень мандрагоры", "quantity": 1}
+        ],
+        "prep_time": "45 мин",
+        "effectiveness": "высокая"
+      }
+    },
+    {
+      "name": "Гаргулья",
+      "description": "Крылатая статуя-голем, оживлённая при помощи магии",
+      "danger_level": 7,
+      "habitats": ["Вдали от людских поселений"],
+      "first_mentioned": "1078-05-18",
+      "vulnerabilities": ["мощная атака", "сталь", "масло против магических тварей", "двимерит"],
+      "parameters": {
+        "height": "2 м",
+        "weight": "400 кг"
+      },
+      "immunities": ["яд"],
+      "activity": "круглосуточно",
+      "recipe": {
+        "ingredients": [
+          {"name": "Порошок голема", "quantity": 1},
+          {"name": "Сера", "quantity": 2},
+          {"name": "Ртуть", "quantity": 1}
+        ],
+        "prep_time": "75 мин",
+        "effectiveness": "высокая"
+      }
+    }
+  ]
+}

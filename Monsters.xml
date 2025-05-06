@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<creatures>
+  <creature>
+    <name>Леший</name>
+    <description>Гибрид человека и лесного духа, охраняющий древние рощи</description>
+    <danger_level>7</danger_level>
+    <habitat>
+      <region>чащи Брокилона</region>
+      <region>Эдингель</region>
+    </habitat>
+    <first_mentioned>1234-06-21</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>нет (неуязвим к магии)</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>3 м</height>
+      <weight>300 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>оглушение</immunity>
+      <immunity>яды</immunity>
+    </immunities>
+    <activity>ночью</activity>
+    <recipe>
+      <ingredient quantity="3">корень мандрагоры</ingredient>
+      <ingredient quantity="1">пепел драконида</ingredient>
+      <ingredient quantity="1">эссенция полыни</ingredient>
+      <prep_time>60 мин</prep_time>
+      <effectiveness>умеренная</effectiveness>
+    </recipe>
+  </creature>
+  <creature>
+    <name>Полуденница</name>
+    <description>Призрак, терроризирующий поля во время жатвы</description>
+    <danger_level>5</danger_level>
+    <habitat>
+      <region>поля Редании</region>
+      <region>амбары Туссента</region>
+    </habitat>
+    <first_mentioned>1198-07-15</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>световая магия</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <weight>неосязаем</weight>
+    </parameters>
+    <immunities>
+      <immunity>кровотечение</immunity>
+    </immunities>
+    <activity>днём</activity>
+    <recipe>
+      <ingredient quantity="2">лепестки лунного цветка</ingredient>
+      <ingredient quantity="1">серебряная нить</ingredient>
+      <ingredient quantity="1">экстракт чеснока</ingredient>
+      <prep_time>30 мин</prep_time>
+      <effectiveness>высокая</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Катакан</name>
+    <description>Крылатый демон с хвостом скорпиона</description>
+    <danger_level>9</danger_level>
+    <habitat>
+      <region>горные пещеры Туссента</region>
+    </habitat>
+    <first_mentioned>1150-04-12</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>нет (неуязвим к магии)</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>2 м</height>
+      <weight>200 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>огонь</immunity>
+      <immunity>яды</immunity>
+    </immunities>
+    <activity>в сумерках</activity>
+    <recipe>
+      <ingredient quantity="4">жало мантикоры</ingredient>
+      <ingredient quantity="2">нефритовая пыль</ingredient>
+      <ingredient quantity="1">спирт Альберихта</ingredient>
+      <prep_time>90 мин</prep_time>
+      <effectiveness>критическая</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Кикимора</name>
+    <description>Болотная нежить из гниющих останков</description>
+    <danger_level>6</danger_level>
+    <habitat>
+      <region>топи Вендена</region>
+    </habitat>
+    <first_mentioned>1221-09-03</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>земляная магия</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>1 м</height>
+      <weight>15 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>удушье</immunity>
+    </immunities>
+    <activity>ночью</activity>
+    <recipe>
+      <ingredient quantity="5">грибы-поганки</ingredient>
+      <ingredient quantity="1">глаз василиска</ingredient>
+      <ingredient quantity="3">роса папоротника</ingredient>
+      <prep_time>45 мин</prep_time>
+      <effectiveness>средняя</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Элементаль льда</name>
+    <description>Дух вечной зимы</description>
+    <danger_level>10</danger_level>
+    <habitat>
+      <region>ледники Ковира</region>
+    </habitat>
+    <first_mentioned>1105-12-01</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>нет (неуязвим к магии)</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>5 м</height>
+      <weight>не измерим</weight>
+    </parameters>
+    <immunities>
+      <immunity>заморозка</immunity>
+      <immunity>дробление</immunity>
+    </immunities>
+    <activity>всегда</activity>
+    <recipe>
+      <ingredient quantity="1">сердце огненного элементаля</ingredient>
+      <ingredient quantity="3">сера</ingredient>
+      <ingredient quantity="1">расплавленное железо</ingredient>
+      <prep_time>120 мин</prep_time>
+      <effectiveness>переменная</effectiveness>
+    </recipe>
+  </creature>
+  <creature>
+    <name>Василиск</name>
+    <description>Странные покрытые чешуёй ящерообразные существа, относящиеся к классу Драконидов</description>
+    <danger_level>8</danger_level>
+    <habitat>
+      <region>Пещеры</region>
+      <region>Заброшенные шахты</region>
+      <region>Канализация</region>
+    </habitat>
+    <first_mentioned>1234-06-21</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>серебро</vulnerability>
+      <vulnerability>масло от орнитозавров</vulnerability>
+      <vulnerability>знак Аард</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>4 м</height>
+      <weight>300 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>большинство ядов</immunity>
+      <immunity>оглушение</immunity>
+      <immunity>железо</immunity>
+    </immunities>
+    <activity>сумерки</activity>
+    <recipe>
+      <ingredient quantity="1">купорос</ingredient>
+      <ingredient quantity="1">квебрит</ingredient>
+      <ingredient quantity="1">ребис</ingredient>
+      <ingredient quantity="1">гидраген</ingredient>
+      <prep_time>60 мин</prep_time>
+      <effectiveness>длительная</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Археспора</name>
+    <description>Плотоядное растение, скрывающееся под поверхностью земли</description>
+    <danger_level>7</danger_level>
+    <habitat>
+      <region>Места жестоких убийств</region>
+      <region>Могилы жертв преступлений</region>
+    </habitat>
+    <first_mentioned>1213-04-15</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>серебро</vulnerability>
+      <vulnerability>огонь</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>3 м</height>
+      <weight>200 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>воздействие на мозг</immunity>
+      <immunity>боль</immunity>
+      <immunity>яд</immunity>
+    </immunities>
+    <activity>ночью</activity>
+    <recipe>
+      <ingredient quantity="1">Медвежье сало</ingredient>
+      <ingredient quantity="1">Гриб-дождевик</ingredient>
+      <ingredient quantity="1">Волкобой</ingredient>
+      <ingredient quantity="1">Плод баллисы</ingredient>
+      <ingredient quantity="1">Печень волка</ingredient>
+      <ingredient quantity="1">Шкура экиммы</ingredient>
+      <prep_time>90 мин</prep_time>
+      <effectiveness>высокая</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Гигантская жаба</name>
+    <description>Ядовитая жаба огромных размеров</description>
+    <danger_level>6</danger_level>
+    <habitat>
+      <region>Заболоченные районы</region>
+      <region>Близ рек и водоемов</region>
+    </habitat>
+    <first_mentioned>1189-08-30</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>мощная атака</vulnerability>
+      <vulnerability>сталь</vulnerability>
+      <vulnerability>масло против проклятых</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>5 м</height>
+      <weight>500 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>болотные газы</immunity>
+    </immunities>
+    <activity>дождь и рассвет</activity>
+    <recipe>
+      <ingredient quantity="1">Собачье сало</ingredient>
+      <ingredient quantity="4">Волкобой</ingredient>
+      <prep_time>60 мин</prep_time>
+      <effectiveness>средняя</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Покаянник</name>
+    <description>Дух погибшего в результате гнусного преступления</description>
+    <danger_level>5</danger_level>
+    <habitat>
+      <region>Все природные условия</region>
+    </habitat>
+    <first_mentioned>1124-11-02</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>быстрая атака</vulnerability>
+      <vulnerability>серебро</vulnerability>
+      <vulnerability>масло против призраков</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>2 м</height>
+      <weight>0 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>физические атаки</immunity>
+    </immunities>
+    <activity>ночью</activity>
+    <recipe>
+      <ingredient quantity="1">Эфирное масло</ingredient>
+      <ingredient quantity="2">Серебряная пыль</ingredient>
+      <ingredient quantity="1">Корень мандрагоры</ingredient>
+      <prep_time>45 мин</prep_time>
+      <effectiveness>высокая</effectiveness>
+    </recipe>
+  </creature>
+
+  <creature>
+    <name>Гаргулья</name>
+    <description>Крылатая статуя-голем, оживлённая при помощи магии</description>
+    <danger_level>7</danger_level>
+    <habitat>
+      <region>Вдали от людских поселений</region>
+    </habitat>
+    <first_mentioned>1078-05-18</first_mentioned>
+    <vulnerabilities>
+      <vulnerability>мощная атака</vulnerability>
+      <vulnerability>сталь</vulnerability>
+      <vulnerability>масло против магических тварей</vulnerability>
+      <vulnerability>двимерит</vulnerability>
+    </vulnerabilities>
+    <parameters>
+      <height>2 м</height>
+      <weight>400 кг</weight>
+    </parameters>
+    <immunities>
+      <immunity>яд</immunity>
+    </immunities>
+    <activity>круглосуточно</activity>
+    <recipe>
+      <ingredient quantity="1">Порошок голема</ingredient>
+      <ingredient quantity="2">Сера</ingredient>
+      <ingredient quantity="1">Ртуть</ingredient>
+      <prep_time>75 мин</prep_time>
+      <effectiveness>высокая</effectiveness>
+    </recipe>
+  </creature>
+
+</creatures>

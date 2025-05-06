@@ -1,0 +1,269 @@
+creatures:
+  - name: Леший
+    description: "Гибрид человека и лесного духа, охраняющий древние рощи"
+    danger_level: 7
+    habitats:
+      - "чащи Брокилона"
+      - "Эдингель"
+    first_mentioned: "1234-06-21"
+    vulnerabilities: 
+      - "нет (неуязвим к магии)"
+    parameters:
+      height: "3 м"
+      weight: "300 кг"
+    immunities:
+      - "оглушение"
+      - "яды"
+    activity: "ночью"
+    recipe:
+      ingredient:
+        - quantity: 3
+          name: "корень мандрагоры"
+        - quantity: 1
+          name: "пепел драконида"
+        - quantity: 1
+          name: "эссенция полыни"
+      prep_time: "60 мин"
+      effectiveness: "умеренная"
+  - name: Полуденница
+    description: "Призрак, терроризирующий поля во время жатвы"
+    danger_level: 5
+    habitats:
+      - "поля Редании"
+      - "амбары Туссента"
+    first_mentioned: "1198-07-15"
+    vulnerabilities: 
+      - "световая магия"
+    parameters:
+      weight: "неосязаем"
+    immunities:
+      - "кровотечение"
+    activity: "днём"
+    recipe:
+      ingredient:
+        - quantity: 2
+          name: "лепестки лунного цветка"
+        - quantity: 1
+          name: "серебряная нить"
+        - quantity: 1
+          name: "экстракт чеснока"
+      prep_time: "30 мин"
+      effectiveness: "высокая"
+  - name: Катакан
+    description: "Крылатый демон с хвостом скорпиона"
+    danger_level: 9
+    habitats:
+      - "горные пещеры Туссента"
+    first_mentioned: "1150-04-12"
+    vulnerabilities: 
+      - "нет (неуязвим к магии)"
+    parameters:
+      height: "2 м"
+      weight: "200 кг"
+    immunities:
+      - "огонь"
+      - "яды"
+    activity: "в сумерках"
+    recipe:
+      ingredient:
+        - quantity: 4
+          name: "жало мантикоры"
+        - quantity: 2
+          name: "нефритовая пыль"
+        - quantity: 1
+          name: "спирт Альберихта"
+      prep_time: "90 мин"
+      effectiveness: "критическая"
+  - name: Кикимора
+    description: "Болотная нежить из гниющих останков"
+    danger_level: 6
+    habitats:
+      - "топи Вендена"
+    first_mentioned: "1221-09-03"
+    vulnerabilities: 
+      - "земляная магия"
+    parameters:
+      height: "1 м"
+      weight: "15 кг"
+    immunities:
+      - "удушье"
+    activity: "ночью"
+    recipe:
+      ingredient:
+        - quantity: 5
+          name: "грибы-поганки"
+        - quantity: 1
+          name: "глаз василиска"
+        - quantity: 3
+          name: "роса папоротника"
+      prep_time: "45 мин"
+      effectiveness: "средняя"
+  - name: Элементаль льда
+    description: "Дух вечной зимы"
+    danger_level: 10
+    habitats:
+      - "ледники Ковира"
+    first_mentioned: "1105-12-01"
+    vulnerabilities: 
+      - "нет (неуязвим к магии)"
+    parameters:
+      height: "5 м"
+      weight: "не измерим"
+    immunities:
+      - "заморозка"
+      - "дробление"
+    activity: "всегда"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "сердце огненного элементаля"
+        - quantity: 3
+          name: "сера"
+        - quantity: 1
+          name: "расплавленное железо"
+      prep_time: "120 мин"
+      effectiveness: "переменная"
+  - name: Василиск
+    description: "Странные покрытые чешуёй ящерообразные существа, относящиеся к классу Драконидов"
+    danger_level:  8
+    habitats:
+      - "Пещеры"
+      - "Заброшенные шахты"
+      - "Канализация"
+    first_mentioned: "1234-06-21"
+    vulnerabilities: 
+      - "серебро"
+      - "масло от орнитозавров"
+      - "знак Аард"
+    parameters:
+      height: "4 м"
+      weight: "300 кг"
+    immunities:
+      - "большинство ядов"
+      - "оглушение"
+      - "железо"
+    activity: "сумерки"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "купорос"
+        - quantity: 1
+          name: "квебрит"
+        - quantity: 2
+          name: "ребис"
+        - quantity: 1
+          name: "гидраген"
+      prep_time: "60 мин"
+      effectiveness: "длительная"
+  - name: Археспора
+    description: "Плотоядное растение, скрывающееся под поверхностью земли"
+    danger_level: 7
+    habitats:
+      - "Места жестоких убийств"
+      - "Могилы жертв преступлений"
+    first_mentioned: "1213-04-15"
+    vulnerabilities: 
+      - "серебро"
+      - "огонь"
+    parameters:
+      height: "3 м"
+      weight: "200 кг"
+    immunities:
+      - "воздействие на мозг"
+      - "боль"
+      - "яд"
+    activity: "ночью"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "Медвежье сало"
+        - quantity: 1
+          name: "Гриб-дождевик"
+        - quantity: 1
+          name: "Волкобой"
+        - quantity: 1
+          name: "Плод баллисы"
+        - quantity: 1
+          name: "Печень волка"
+        - quantity: 1
+          name: "Шкура экиммы"
+      prep_time: "90 мин"
+      effectiveness: "высокая"
+  - name: Гигантская жаба
+    description: "Ядовитая жаба огромных размеров"
+    danger_level: 6
+    habitats:
+      - "Заболоченные районы"
+      - "Близ рек и водоемов"
+    first_mentioned: "1189-08-30"
+    vulnerabilities: 
+      - "мощная атака"
+      - "сталь"
+      - "масло против проклятых"
+    parameters:
+      height: "5 м"
+      weight: "500 кг"
+    immunities:
+      - "болотные газы"
+    activity: "дождь и рассвет"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "Собачье сало"
+        - quantity: 4
+          name: "Волкобой"
+      prep_time: "60 мин"
+      effectiveness: "средняя"
+  - name: Покаянник
+    description: "Дух погибшего в результате гнусного преступления"
+    danger_level: 5
+    habitats:
+      - "Все природные условия"
+    first_mentioned: "1124-11-02"
+    vulnerabilities: 
+      - "быстрая атака"
+      - "серебро"
+      - "масло против призраков"
+    parameters:
+      height: "2 м"
+      weight: "неосязаем"
+    immunities:
+      - "физические атаки"
+    activity: "ночью"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "Эфирное масло"
+        - quantity: 2
+          name: "Серебряная пыль"
+        - quantity: 1
+          name: "Корень мандрагоры"
+      prep_time: "45 мин"
+      effectiveness: "высокая"
+  - name: Гаргулья
+    description: "Крылатая статуя-голем, оживлённая при помощи магии"
+    danger_level: 7
+    habitats:
+      - "Вдали от людских поселений"
+    first_mentioned: "1078-05-18"
+    vulnerabilities: 
+      - "мощная атака"
+      - "сталь"
+      - "масло против магических тварей"
+      - "двимерит"
+    parameters:
+      height: "2 м"
+      weight: "400 кг"
+    immunities:
+      - "яд"
+    activity: "круглосуточно"
+    recipe:
+      ingredient:
+        - quantity: 1
+          name: "Порошок голема"
+        - quantity: 2
+          name: "Сера"
+        - quantity: 1
+          name: "Ртуть"
+      prep_time: "75 мин"
+      effectiveness: "высокая"
