@@ -26,10 +26,6 @@ public class MonsterStorage {
         }
     }
 
-    /*public List<Monster> getMonstersByFile(File file) {
-        return Collections.unmodifiableList(monstersByFile.getOrDefault(file, Collections.emptyList()));
-    }*/
-
     public List<Monster> getMonsters() {
         return Collections.unmodifiableList(monsters);
     }
@@ -39,10 +35,6 @@ public class MonsterStorage {
                 .filter(m -> m.getId().equals(id))
                 .findFirst();
     }
-
-    /*public List<Monster> getMonstersBySource(String source) {
-        return Collections.unmodifiableList(monstersBySource.getOrDefault(source, Collections.emptyList()));
-    }*/
     
     public List<Monster> getMonstersBySource(String source) {
         List<Monster> filteredMonsters = new ArrayList<>();
@@ -98,38 +90,4 @@ public class MonsterStorage {
 
         return false;
     }
-
-    /*public boolean updateMonster(UUID id, Monster newData) {
-        Optional<Monster> existing = getMonsterById(id);
-        if (existing.isPresent()) {
-            Monster monster = existing.get();
-            String originalSource = monster.getSource();
-            monster.setName(newData.getName());
-            monster.setDescription(newData.getDescription());
-            monster.setDangerLevel(newData.getDangerLevel());
-            monster.setHabitats(newData.getHabitats());
-            monster.setFirstMentioned(newData.getFirstMentioned());
-            monster.setVulnerabilities(newData.getVulnerabilities());
-            monster.setImmunities(newData.getImmunities());
-            monster.setActivity(newData.getActivity());
-            monster.getParameters().clear();
-            monster.getParameters().putAll(newData.getParameters());
-            monster.getRecipe().clear();
-            monster.getRecipe().addAll(newData.getRecipe());
-            
-
-            if (!originalSource.equals(newData.getSource())) {
-                monstersBySource.get(originalSource).remove(monster);
-                monstersBySource.computeIfAbsent(newData.getSource(), k -> new ArrayList<>()).add(monster);
-                monster.setSource(newData.getSource());
-            }
-
-            return true;
-        }
-        return false;
-    }*/
-
-    /*public Set<String> getAllSources() {
-        return monstersBySource.keySet();
-    }*/
 }
