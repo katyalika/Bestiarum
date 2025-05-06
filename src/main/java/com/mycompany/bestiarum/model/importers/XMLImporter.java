@@ -37,7 +37,6 @@ public class XMLImporter implements FileImporter {
                     monsters.add(monster);
                 }
             }
-
             return monsters;
         } else if (next != null) {
             return next.importFile(file);

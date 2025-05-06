@@ -12,10 +12,8 @@ import javax.swing.*;
  * @author lihac
  */
 public class MonsterExporterManager {
-    private final MonsterStorage storage;
 
     public MonsterExporterManager(MonsterStorage storage) {
-        this.storage = storage;
     }
 
     public void exportData(JFrame parent, List<Monster> monsters) {

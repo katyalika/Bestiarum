@@ -72,7 +72,7 @@ public class MonsterView extends JFrame {
         monsterDetails.setFont(monoFont);
         monsterDetails.setLineWrap(true);
         monsterDetails.setWrapStyleWord(true);
-        monsterDetails.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(accentColor), "All Monster Details", 0, 0, titleFont, accentColor));
+        monsterDetails.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(accentColor), "Информация о чудовище", 0, 0, titleFont, accentColor));
         JScrollPane detailsScroll = new JScrollPane(monsterDetails);
         detailsScroll.setPreferredSize(new Dimension(520, 320));
         rightPanel.add(detailsScroll, BorderLayout.CENTER);
@@ -104,7 +104,7 @@ public class MonsterView extends JFrame {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(backgroundColor);
-        JButton importButton = new JButton("Import Files");
+        JButton importButton = new JButton("Импорт");
         importButton.setBackground(accentColor);
         importButton.setForeground(backgroundColor);
         importButton.setFont(titleFont);
@@ -112,7 +112,7 @@ public class MonsterView extends JFrame {
         importButton .addActionListener(e -> importFiles());
         buttonPanel.add(importButton);
 
-        JButton exportButton = new JButton("Export All");
+        JButton exportButton = new JButton("Экспорт");
         exportButton.setBackground(accentColor);
         exportButton.setForeground(backgroundColor);
         exportButton.setFont(titleFont);
@@ -132,17 +132,24 @@ public class MonsterView extends JFrame {
         controller.importFiles(this, monsters -> {
             updateTree();
             JOptionPane.showMessageDialog(this,
-                    "Imported " + monsters.size() + " monsters",
-                    "Import Complete", JOptionPane.INFORMATION_MESSAGE);
+                    "Импортировано " + monsters.size() + " чудовищ",
+                    "Импорт завершен", JOptionPane.INFORMATION_MESSAGE);
         });
-    }
+    }    
     
     private void exportAll() {
-        controller.exportAllMonsters(this);
+        DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) monsterTree.getLastSelectedPathComponent();
+        if (selectedNode != null && selectedNode.getUserObject() instanceof Monster) {
+            Monster selectedMonster = (Monster) selectedNode.getUserObject();
+            List<Monster> monsters = controller.getMonstersBySource(selectedMonster.getSource());
+            controller.exportMonsters(this, monsters); 
+        } else {
+            JOptionPane.showMessageDialog(this, "Пожалуйста, выберите файл для экспорта.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void updateTree() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Monsters");
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Чудовища");
 
         Map<String, List<Monster>> monstersBySource = new HashMap<>();
         for (Monster monster : controller.getAllMonsters()) {
@@ -231,11 +238,8 @@ public class MonsterView extends JFrame {
         }
         sb.append("  Эффективность: ").append(nonNullOrDefault(monster.getParameter("effectiveness"), "не указано")).append("\n");
         sb.append("  Время приготовления: ").append(nonNullOrDefault(monster.getParameter("prep_time"), "не указано")).append("\n");
-
-
         monsterDetails.setText(sb.toString());
         monsterDetails.setCaretPosition(0);
-
         descriptionArea.setText(monster.getDescription());
     }
 
@@ -257,10 +261,5 @@ public class MonsterView extends JFrame {
 
     private String nonNullOrDefault(String str, String def) {
         return (str != null && !str.isEmpty()) ? str : def;
-    }
-
-    private String capitalize(String str) {
-        if (str == null || str.isEmpty()) return str;
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

@@ -24,7 +24,6 @@ public class JSONImporter implements FileImporter {
     public List<Monster> importFile(File file) throws Exception {
         if (canHandle(file)) {
             ObjectMapper mapper = new ObjectMapper();
-            // Читаем корневой объект, который содержит массив "creatures"
             Map<String, List<Map<String, Object>>> data = mapper.readValue(file, new TypeReference<Map<String, List<Map<String, Object>>>>() {
             });
 

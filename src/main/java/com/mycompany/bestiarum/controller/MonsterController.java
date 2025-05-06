@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 public class MonsterController {
     private final MonsterStorage storage = new MonsterStorage();
     private final FileImporter fileImporter = createImporterChain();
-    private final MonsterExporterManager exportManager = new MonsterExporterManager(storage);
     private final Map<File, List<UUID>> fileMonsterMap = new HashMap<>();
 
     public void importFiles(JFrame parent, Consumer<List<Monster>> onSuccess) {
@@ -50,18 +49,10 @@ public class MonsterController {
                     "Import Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public List<Monster> getMonstersByFile(File file) {
-        return storage.getMonstersByFile(file);
-    }
     
-    public void exportAllMonsters(JFrame parent) {
-        List<Monster> allMonsters = storage.getMonsters();
-        exportManager.exportData(parent, allMonsters);
-    }
-
-    public boolean updateMonster(UUID id, Monster newData) {
-        return storage.updateMonster(id, newData);
+    public void exportMonsters(JFrame parent, List<Monster> monsters) {
+        MonsterExporterManager exporterManager = new MonsterExporterManager(storage);
+        exporterManager.exportData(parent, monsters);
     }
 
     public List<Monster> getAllMonsters() {
@@ -92,4 +83,6 @@ public class MonsterController {
                 "JSON, XML, YAML Files", "json", "xml", "yaml", "yml"));
         return fc;
     }
+    
+    
 }

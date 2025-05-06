@@ -47,7 +47,6 @@ public class XMLExporter {
                 appendTextElement(doc, vulnerabilitiesElement, "vulnerability", vuln);
             }
 
-            // Добавляем рецепт
             Element recipeElement = doc.createElement("recipe");
             monsterElement.appendChild(recipeElement);
             for (Map<String, Object> ing : monster.getRecipe()) {

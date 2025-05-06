@@ -182,7 +182,7 @@ public class Monster {
         return name;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -197,6 +197,6 @@ public class Monster {
     @Override
     public int hashCode() {
         return id.hashCode();
-    }
+    }*/
     
 }

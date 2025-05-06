@@ -34,7 +34,6 @@ public class JSONExporter {
             monsterData.put("immunities", monster.getImmunities());
             monsterData.put("activity", monster.getActivity());
 
-            // Добавляем рецепт
             Map<String, Object> recipeData = new HashMap<>();
             recipeData.put("ingredients", monster.getRecipe());
             recipeData.put("prep_time", monster.getParameter("prep_time"));
